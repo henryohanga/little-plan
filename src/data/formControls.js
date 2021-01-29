@@ -61,10 +61,7 @@ export const formControls = [
       placeholder: 'e.g 2',
     },
     visibleOn: {
-      previous: {
-        operation: 'eq',
-        value: 'HAS_CHILDREN',
-      },
+      previousValue: 'HAS_CHILDREN',
     },
   },
   {

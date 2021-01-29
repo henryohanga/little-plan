@@ -40,14 +40,11 @@ function App() {
     const currentControl = controls[currentIndex];
     const potentialNext = controls[currentIndex + 1];
 
-    if (potentialNext.visibleOn?.previous) {
-      const { operation, value } = potentialNext.visibleOn.previous;
-      if (operation === 'eq') {
-        if (currentControl.answer === value) {
-          setCurrentIndex((currentIndex) => currentIndex + 1);
-        } else {
-          setCurrentIndex((currentIndex) => currentIndex + 2);
-        }
+    if (potentialNext.visibleOn?.previousValue) {
+      if (currentControl.answer === potentialNext.visibleOn.previousValue) {
+        setCurrentIndex((currentIndex) => currentIndex + 1);
+      } else {
+        setCurrentIndex((currentIndex) => currentIndex + 2);
       }
     } else {
       setCurrentIndex((currentIndex) => currentIndex + 1);
@@ -92,13 +89,9 @@ function App() {
     const potentialNext = formControls[nextIndex];
     const previous = formControls[nextIndex - 1];
 
-    if (potentialNext.visibleOn?.previous) {
-      const { operation, value } = potentialNext.visibleOn?.previous;
-
-      if (operation === 'eq') {
-        if (previous.answer !== value) {
-          nextIndex += 1;
-        }
+    if (potentialNext.visibleOn?.previousValue) {
+      if (previous.answer !== potentialNext.visibleOn.previousValue) {
+        nextIndex += 1;
       }
     }
 
