@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/little-plan/static/css/main.33d6f2e2.chunk.css",
+    "main.js": "/little-plan/static/js/main.b6a7086d.chunk.js",
+    "main.js.map": "/little-plan/static/js/main.b6a7086d.chunk.js.map",
+    "runtime-main.js": "/little-plan/static/js/runtime-main.04e5ba04.js",
+    "runtime-main.js.map": "/little-plan/static/js/runtime-main.04e5ba04.js.map",
+    "static/css/2.f753df28.chunk.css": "/little-plan/static/css/2.f753df28.chunk.css",
+    "static/js/2.68f84c06.chunk.js": "/little-plan/static/js/2.68f84c06.chunk.js",
+    "static/js/2.68f84c06.chunk.js.map": "/little-plan/static/js/2.68f84c06.chunk.js.map",
+    "static/js/3.ffc01176.chunk.js": "/little-plan/static/js/3.ffc01176.chunk.js",
+    "static/js/3.ffc01176.chunk.js.map": "/little-plan/static/js/3.ffc01176.chunk.js.map",
+    "index.html": "/little-plan/index.html",
+    "static/css/2.f753df28.chunk.css.map": "/little-plan/static/css/2.f753df28.chunk.css.map",
+    "static/css/main.33d6f2e2.chunk.css.map": "/little-plan/static/css/main.33d6f2e2.chunk.css.map",
+    "static/js/2.68f84c06.chunk.js.LICENSE.txt": "/little-plan/static/js/2.68f84c06.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/little-plan/static/media/icon-form-dropdown.68b66c90.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.04e5ba04.js",
+    "static/css/2.f753df28.chunk.css",
+    "static/js/2.68f84c06.chunk.js",
+    "static/css/main.33d6f2e2.chunk.css",
+    "static/js/main.b6a7086d.chunk.js"
+  ]
+}
