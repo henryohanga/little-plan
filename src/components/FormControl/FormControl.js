@@ -2,7 +2,13 @@ import React from 'react';
 
 import './FormControl.scss';
 
-const FormControl = ({ control, onControlChange }) => {
+const FormControl = ({ control, onControlChange, onEnter }) => {
+  const handleKeyUp = (e) => {
+    if (e.key === 'Enter' && control.answer) {
+      return onEnter();
+    }
+  };
+
   if (control.options.type === 'radio') {
     return (
       <div>
@@ -19,6 +25,7 @@ const FormControl = ({ control, onControlChange }) => {
                 onChange={(e) =>
                   onControlChange(control.controlName, e.currentTarget.value)
                 }
+                onKeyUp={(e) => handleKeyUp(e)}
               />
               <label htmlFor={item.value} className="p-label">
                 {item.label}
@@ -43,6 +50,7 @@ const FormControl = ({ control, onControlChange }) => {
         onChange={(e) =>
           onControlChange(control.controlName, e.currentTarget.value)
         }
+        onKeyUp={(e) => handleKeyUp(e)}
       />
 
       <ul className="mt8 ">

@@ -10,8 +10,12 @@ const FormGroup = ({
   const currentControl = controls[currentIndex];
 
   return (
-    <form>
-      <FormControl control={currentControl} onControlChange={onFormUpdate} />
+    <div>
+      <FormControl
+        control={currentControl}
+        onControlChange={onFormUpdate}
+        onEnter={onNext}
+      />
 
       <button
         type="button"
@@ -25,7 +29,7 @@ const FormGroup = ({
           ? 'Get your recommendation'
           : 'Next'}
       </button>
-    </form>
+    </div>
   );
 };
 
