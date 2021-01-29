@@ -13,7 +13,7 @@ const FormControl = ({ control, onControlChange, onEnter }) => {
     return (
       <div>
         <label className="d-inline-block mb16">{control.label}</label>
-        {control.options.items.map((item) => {
+        {control.options.items.map((item, index) => {
           return (
             <React.Fragment key={item.value}>
               <input
@@ -22,6 +22,7 @@ const FormControl = ({ control, onControlChange, onEnter }) => {
                 type="radio"
                 value={item.value}
                 name={control.controlName}
+                autoFocus={index === 0}
                 onChange={(e) =>
                   onControlChange(control.controlName, e.currentTarget.value)
                 }
@@ -47,6 +48,7 @@ const FormControl = ({ control, onControlChange, onEnter }) => {
         className="p-input"
         {...control.options}
         value={control.answer}
+        autoFocus={true}
         onChange={(e) =>
           onControlChange(control.controlName, e.currentTarget.value)
         }
