@@ -20,9 +20,9 @@ function App() {
 
   const [showForm, setShowForm] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
-
-  const [recommendations, setRecommendations] = useState([]);
   const [hasToken, setHasToken] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
 
   const onFormUpdate = (controlName, value) => {
     const updateControls = controls.map((control) => {
@@ -64,6 +64,13 @@ function App() {
   };
 
   useEffect(() => {
+    const hasAccessToken = Boolean(localStorage.getItem('accessToken'));
+    setHasToken(hasAccessToken);
+
+    if (hasAccessToken) {
+      fetchRecommendations();
+    }
+
     const formControls = JSON.parse(localStorage.getItem('formControls'));
     let nextIndex = (formControls ?? []).findIndex((el) => !el.answer);
 
@@ -98,17 +105,127 @@ function App() {
     return nextIndex;
   };
 
-  const onSubmit = () => {
-    console.log('Submit');
+  const onSubmit = async () => {
+    const formData = controls.reduce((acc, next) => {
+      acc[next.controlName] = next.answer;
+      return acc;
+    }, {});
+    const { hasChildren, ...payload } = formData;
+
+    // unset errors
+    setControls(() => controls.map((control) => ({ ...control, errors: [] })));
+
+    // show loaser on submit button
+    setIsButtonLoading(true);
+
+    const data = await fetchToken(payload);
+
+    if (data.errors) {
+      handleErrors(data.errors);
+    }
+
+    if (data.jwt) {
+      saveToken(data.jwt);
+      setHasToken(true);
+      await fetchRecommendations();
+    }
+
+    setIsButtonLoading(false);
+  };
+
+  const fetchToken = async (payload) => {
+    const resp = await fetch(process.env.REACT_APP_API_BASE_URL + '/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...payload,
+        numberOfChildren: Number(payload.numberOfChildren),
+      }),
+    });
+
+    return resp.json();
+  };
+
+  const handleErrors = (errors) => {
+    const errorKeys = Object.keys(errors);
+
+    let firstErrorIndex = null;
+
+    const updatedControls = controls.map((control, index) => {
+      if (errorKeys.includes(control.controlName)) {
+        // track the first error index
+        if (!firstErrorIndex) {
+          firstErrorIndex = index;
+        }
+
+        return {
+          ...control,
+          errors: errors[control.controlName],
+        };
+      }
+
+      return control;
+    });
+
+    setControls(() => updatedControls);
+
+    // move the user to the first error index
+    if (firstErrorIndex !== null) {
+      setCurrentIndex(firstErrorIndex);
+    }
+  };
+
+  const saveToken = (token) => {
+    localStorage.removeItem('accessToken');
+    localStorage.setItem('accessToken', token);
+  };
+
+  const fetchRecommendations = async () => {
+    setIsFetching(true);
+
+    const resp = await fetch(
+      process.env.REACT_APP_API_BASE_URL + '/recommendation',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+      }
+    );
+
+    let data = await resp.json();
+
+    // sort by plan amount and update recommendations
+    if (resp.ok) {
+      data.sort((a, b) => a.price.amount - b.price.amount);
+      setRecommendations(data);
+    }
+
+    setIsFetching(false);
+    return data;
+  };
+
+  const onClear = () => {
+    localStorage.clear();
+    setControls(() => formControls);
+    setCurrentIndex(0);
+    setHasToken(false);
+    setShowForm(false);
   };
 
   return (
     <div className="d-flex App ws8">
-      <Header onClear={() => {}} />
+      <Header onClear={onClear} />
 
       <main className="App-main">
         {hasToken ? (
-          <Recommendations recommendations={recommendations} />
+          <Recommendations
+            recommendations={recommendations}
+            isFetching={isFetching}
+          />
         ) : (
           <React.Fragment>
             {showForm ? (

@@ -1,0 +1,13 @@
+@import '@popsure/dirty-swan/dist/colors';
+
+.Recommendation {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid $ds-grey-300;
+  cursor: pointer;
+
+  &-type {
+    text-transform: capitalize;
+  }
+}
