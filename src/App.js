@@ -17,13 +17,17 @@ function App() {
     formControls.map((control) => ({ ...control, answer: '', errors: [] }))
   );
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const [showForm, setShowForm] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [hasToken, setHasToken] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
+  /**
+   * Handle form data change
+   * @param {String} controlName
+   * @param {*} value
+   */
   const onFormUpdate = (controlName, value) => {
     const updateControls = controls.map((control) => {
       if (control.controlName === controlName) {
@@ -36,6 +40,10 @@ function App() {
     setControls(updateControls);
   };
 
+  /**
+   * Move to the next control, considering any
+   * inter-dependencies among controls
+   */
   const goToNextControl = () => {
     const currentControl = controls[currentIndex];
     const potentialNext = controls[currentIndex + 1];
@@ -50,6 +58,10 @@ function App() {
       setCurrentIndex((currentIndex) => currentIndex + 1);
     }
   };
+
+  /**
+   * Handle next/submit button click
+   */
   const onNext = () => {
     if (currentIndex === controls.length - 1) {
       onSubmit();
@@ -60,6 +72,11 @@ function App() {
     localStorage.setItem('formControls', JSON.stringify(controls));
   };
 
+  /**
+   * Initialise app states from localStorage
+   * including checking whether a user already
+   * has a token or not.
+   */
   useEffect(() => {
     const hasAccessToken = Boolean(localStorage.getItem('accessToken'));
     setHasToken(hasAccessToken);
@@ -85,6 +102,11 @@ function App() {
     }
   }, []);
 
+  /**
+   * Find exact index of the next item based on any
+   * dependencies on the previous value
+   * @param {Number} nextIndex
+   */
   const computeNextFromPrevious = (nextIndex) => {
     const potentialNext = formControls[nextIndex];
     const previous = formControls[nextIndex - 1];
@@ -98,6 +120,9 @@ function App() {
     return nextIndex;
   };
 
+  /**
+   * Submit user responses to the API
+   */
   const onSubmit = async () => {
     const formData = controls.reduce((acc, next) => {
       acc[next.controlName] = next.answer;
@@ -141,6 +166,10 @@ function App() {
     return resp.json();
   };
 
+  /**
+   * Map errors to controls through errors control property
+   * @param {object} errors the error object
+   */
   const handleErrors = (errors) => {
     const errorKeys = Object.keys(errors);
 
@@ -170,11 +199,18 @@ function App() {
     }
   };
 
+  /**
+   * Save the token to localStorage
+   * @param {string} token the token to be saved
+   */
   const saveToken = (token) => {
     localStorage.removeItem('accessToken');
     localStorage.setItem('accessToken', token);
   };
 
+  /**
+   * Fetch recommendations
+   */
   const fetchRecommendations = async () => {
     setIsFetching(true);
 
@@ -201,9 +237,14 @@ function App() {
     return data;
   };
 
+  /**
+   * Reset the app state
+   */
   const onClear = () => {
     localStorage.clear();
-    setControls(() => formControls);
+    setControls(() =>
+      formControls.map((control) => ({ ...control, answer: '', errors: [] }))
+    );
     setCurrentIndex(0);
     setHasToken(false);
     setShowForm(false);

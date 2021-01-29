@@ -8,9 +8,9 @@ const Recommendation = ({ recommendation }) => {
       </span>
       <span>
         €
-        {recommendation.price.amount.toLocaleString(
-          navigator.language || 'de-DE'
-        )}{' '}
+        {Number(recommendation.price.amount)
+          .toFixed(2)
+          .toLocaleString(navigator.language || 'de-DE')}{' '}
         per {recommendation.price.periodicity.toLowerCase()}
       </span>
     </li>
